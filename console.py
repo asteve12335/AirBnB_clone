@@ -49,7 +49,7 @@ class HBNBCommand(cmd.Cmd):
         """
         if line == "" or line is None:
             print("** class name missing **")
-        elif line not in storage.classes():
+        elif line not in CLASSES:
             print("** class doesn't exist **")
         else:
             b = storage.classes()[line]()
@@ -65,7 +65,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             words = line.split(' ')
-            if words[0] not in storage.classes():
+            if words[0] not in CLASSES:
                 print("** class doesn't exist **")
             elif len(words) < 2:
                 print("** instance id missing **")
