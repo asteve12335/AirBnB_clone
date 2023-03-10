@@ -37,7 +37,7 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
-    def do_emptyline(self):
+    def emptyline(self):
         """Doesn't do anything on Enter"""
         pass
 
@@ -52,9 +52,9 @@ class HBNBCommand(cmd.Cmd):
         elif line not in CLASSES:
             print("** class doesn't exist **")
         else:
-            b = storage.classes()[line]()
-            b.save()
-            print(b.id)
+            line = eval(line + '()')
+            line.save()
+            print(line.id)
 
     def do_show(self, line):
         """
