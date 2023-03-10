@@ -102,7 +102,17 @@ class HBNBCommand(cmd.Cmd):
         Prints all string representation of all instances
         based or not on the class name.
         """
-        if line != "":
+        arg_list = split(line)
+        objects = self.storage.all().values()
+        if not arg_list:
+            print([str(obj) for obj in objects])
+        else:
+            if arg_list[0] not in CLASSES:
+                print("** class doesn't exist **")
+            else:
+                print([str(obj) for obj in objects
+                       if arg_list[0] in str(obj)])
+        """if line != "":
             words = line.split(' ')
             if words[0] not in CLASSES:
                 print("** class doesn't exist **")
@@ -112,7 +122,7 @@ class HBNBCommand(cmd.Cmd):
                 print(nl)
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
-            print(new_list)
+            print(new_list)"""
             
     def do_update(self, line):
         """
