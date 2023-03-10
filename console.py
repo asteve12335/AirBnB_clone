@@ -5,7 +5,6 @@ import cmd
 import json
 import re
 
-import models
 from models.base_model import BaseModel
 from models import storage
 
@@ -26,7 +25,7 @@ class HBNBCommand(cmd.Cmd):
     """Class for the command interpreter"""
 
     prompt = "(hbnb) "
-    #storage = models.storage
+    # storage = models.storage
 
     def do_quit(self, line):
         """Exit the program"""
@@ -113,7 +112,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
             print(new_list)
-            
+
     def do_update(self, line):
         """
         Updates an instance based on class name and id
@@ -163,7 +162,6 @@ class HBNBCommand(cmd.Cmd):
                         pass  # fine, stay a string then
                 setattr(storage.all()[key], attribute, value)
                 storage.all()[key].save()
-
 
 
 if __name__ == '__main__':
