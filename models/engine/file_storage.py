@@ -2,7 +2,7 @@
 """Module for FileStorage class."""
 import datetime
 import json
-import os
+from os import path
 
 
 class FileStorage:
