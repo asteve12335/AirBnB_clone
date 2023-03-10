@@ -4,8 +4,9 @@ Module that contain a class called FileStorage
 FileStorage - Class that serializes instances
 to a JSON file and deserializes JSON file to instances
 """
+import datetime
 import json
-from os import path
+import os
 
 
 class FileStorage():
@@ -41,8 +42,10 @@ class FileStorage():
         """Deserializes the JSON file to __objects."""
         if path.isfile(FileStorage.__file_path):
             with open(FileStorage.__file_path, "r") as f:
-                input = json.load(f)
-                for k, v in input.items():
-                    FileStorage.__objects[k] = eval(v["__class__"])(**v)
+                obj_dict = json.load(f)
+                obj_dict = {k: self.classes()[v["__class__"]](**v)
+                        for k, v in obj_dict.items()}
+            # TODO: should this overwrite or insert?
+            FileStorage.__objects = obj_dict
         else:
             pass
