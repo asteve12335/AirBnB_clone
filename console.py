@@ -4,15 +4,29 @@
 import cmd
 import json
 import re
+
+import models
 from models.base_model import BaseModel
 from models import storage
+
+# A global constant since both functions within and outside uses it.
+CLASSES = [
+    "BaseModel",
+    "User",
+    "City",
+    "Place",
+    "State",
+    "Amenity",
+    "Review"
+]
 
 
 class HBNBCommand(cmd.Cmd):
 
     """Class for the command interpreter"""
 
-    prompt = "(hbnb)"
+    prompt = "(hbnb) "
+    #storage = models.storage
 
     def do_quit(self, line):
         """Exit the program"""
@@ -90,7 +104,7 @@ class HBNBCommand(cmd.Cmd):
         """
         if line != "":
             words = line.split(' ')
-            if words[0] not in storage.classes():
+            if words[0] not in CLASSES:
                 print("** class doesn't exist **")
             else:
                 nl = [str(obj) for key, obj in storage.all().items()
