@@ -1,65 +1,85 @@
-#!/usr/bin/env python3
-"""
-Module that contain a class called FileStorage
-FileStorage - Class that serializes instances
-to a JSON file and deserializes JSON file to instances
-"""
-import datetime
+#!/usr/bin/python3
+"""File storage engine module."""
 import json
-import os
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
-class FileStorage():
-    """Class that serializes instances to a JSON file
-    and deserializes JSON file to instances
+class FileStorage:
+    """Serialize data and save it as json, also deserialize
+    json and create objects.
     Args:
         __file_path: string - path to the JSON file (ex: file.json)
-        __objects: dictionary - empty but will store
-                   all objects by <class name>.id
-                   ex: to store a BaseModel object with id=12121212,
-                   the key will be BaseModel.12121212)
+        __objects: dictionary - empty but will store all objects
+        by <class name>.id (ex: to store a BaseModel object with id=12121212,
+        the key will be BaseModel.12121212).
     """
-    __file_path = 'file.json'
-    __objects = {}
+    __file_path: str = "file.json"
+    __objects: dict = dict()
 
     def all(self):
-        """returns the dictionary"""
-        return FileStorage.__objects
+        """Returns the dictionary objects <__objects>."""
+
+        return self.__objects
 
     def new(self, obj):
-        """sets in __objects the obj with key <obj class name>.id"""
-        FileStorage.__objects['{}.{}'
-                              .format(type(obj).__name__, obj.id)] = obj
+        """ Set in the object in the __object dictionary with the kay
+        which is a combination of the object class and the id
+        example BaseModel.121212
+        obj: instance object to serialize
+        """
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        self.__objects[key] = obj
 
     def save(self):
-        """Serializes __objects to the JSON file"""
-        obj_dict = FileStorage.__objects.copy()
-        output = {k: v.to_dict() for k, v in obj_dict.items()}
-        with open(FileStorage.__file_path, "w") as f:
-            json.dump(output, f, sort_keys=True, indent=4)
-            
-    def classes(self):
-        """Returns a dictionary of valid classes and their references"""
-        from models.base_model import BaseModel
+        """Serialize and save the object to a json file
+        specified by __file_path
         """
-        from models.user import User
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.place import Place
-        from models.review import Review
-        """
+        temp_dictionary: dict = {k: v.to_dict() for k, v in
+                                 self.__objects.items()}
 
-        classes = {"BaseModel": BaseModel}
-        return classes
+        with open(self.__file_path, 'w', encoding='utf-8') as f:
+            json.dump(temp_dictionary, f)
+
+    def destroy(self, key):
+        """This method deletes instance for the file storage
+        Args:
+            key (str): They of the object instance
+        """
+        try:
+            del self.__objects[key]
+
+            self.save()
+            return True
+        except KeyError:
+            return False
 
     def reload(self):
-        """Reloads the stored objects"""
-        if not os.path.isfile(FileStorage.__file_path):
-            return
-        with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
-            obj_dict = json.load(f)
-            obj_dict = {k: self.classes()[v["__class__"]](**v)
-                        for k, v in obj_dict.items()}
-            # TODO: should this overwrite or insert?
-            FileStorage.__objects = obj_dict
+        """Deserializes the JSON file to __objects
+        (only if the JSON file (__file_path) exists
+        otherwise, do nothing. If the file doesn’t
+        exist, no exception should be raised).
+        """
+
+        __model_classes = {"BaseModel": BaseModel,
+                           "User": User,
+                           "Place": Place,
+                           "State": State,
+                           "City": City,
+                           "Amenity": Amenity,
+                           "Review": Review}
+        temp_dict: dict = {}
+        try:
+            with open(self.__file_path, 'r', encoding='utf-8') as f:
+                temp_dict = json.loads(f.read())
+            for key, value in temp_dict.items():
+                s_key = key.split(".")[0]
+                if s_key in __model_classes.keys():
+                    self.__objects[key] = __model_classes[s_key](**value)
+        except (KeyError, FileNotFoundError):
+            pass
