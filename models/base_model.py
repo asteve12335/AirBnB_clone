@@ -35,8 +35,9 @@ class BaseModel:
 
     def __str__(self):
         """Returns official string representation"""
+        d = self.__dict__
 
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(type(self).__name__, self.id, d)
 
     def save(self):
         """Updates the public instance updated_at"""
