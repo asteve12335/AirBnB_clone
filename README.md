@@ -148,6 +148,4 @@ EOF  all  create  destroy  help  quit  show  update
 ```
  
 ## Authors
-Oluwatoye Agbonjinmi - [Github](https://github.com/oluwatoyeidowu)
- 
-Oluwaseun Aladejana - [Github](https://github.com/Silva-6) / [linkedin](https://www.linkedin.com/in/oluwaseun-aladejana)
+Anock Steve - [Github](https://https://github.com/asteve12335)
